@@ -1,8 +1,8 @@
 ﻿uses GraphABC;
 
 const
-  fx = 10;
-  fy = 10;
+  fx = 3;
+  fy = 3;
 
 var
   Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
@@ -12,9 +12,11 @@ var
   y: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
-  F: text;
+  f: text;
   s, g: string;
   a: array of string;
+  f1: text ;
+  p:integer;
 
 procedure drf();// отрисовка поля 
 var
@@ -217,17 +219,23 @@ end;
 procedure KeyDown(Key: integer);
 begin
   if key = VK_Space  then flag := not flag; //постановка паузы
+  if key = VK_delete then p:=0;
 end;
 
 
 begin
-  g := 'Settings.ini';
-  Assign(F, g);
-  Reset(F);
+  p:=1;
   LockDrawing;
   OnMouseDown := md;
   flag := true;
   OnKeyDown := KeyDown;
+  g := 'Settings.ini';
+  Assign(F, g);
+  Reset(F);
+  g := 'saved array.txt';
+  DeleteFile(g);
+  Assign(f1,g);
+  f1.Rewrite();
   while not EOF(F) do
   begin
     Readln(F, s);
@@ -242,6 +250,9 @@ begin
     sleep(300);
     step;
     drf;
-  until  0 = 1;
+    writeln(f1,life);
+    if p = 0 then  halt(0)
+  until  0 = p;
+  //CloseFile(f1);
 end.
 // в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) хищник умирает с некторой вероятностью и также записывает в текстовый файл парметр "название"="значение в параметра"  
