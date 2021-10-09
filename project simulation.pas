@@ -11,7 +11,10 @@ var
   x: integer;
   y: integer;
   flag: boolean;
-  fp:integer;// поле зрения хищника который (будет считываться из  текстового файла)
+  fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
+  F: text;
+  s, g: string;
+  a: array of string;
 
 procedure drf();// отрисовка поля 
 var
@@ -35,10 +38,10 @@ begin
   Redraw;
 end;
 
-function Nextlife(x, y,fp: integer): integer;
+function Nextlife(x, y, fp: integer): integer;
 
 var
-  n, a, b, c, v, m,i: integer;
+  n, a, b, c, v, m, i,k: integer;
 begin
   n := 0;
   a := 0;
@@ -46,10 +49,12 @@ begin
   c := 0;
   v := 0;
   m := 0;
+  k := 0;
   b := random(0, 7);
   n := random(1, 10);
   v := random(1, 10);
   m := random(0, 7);
+  k := random(1,fp); 
   if (life[x][y] = 1) and (n > 7) then // если да то где размножится 
     if b = 0 then Next[x][y + 1] := 1
         else
@@ -67,91 +72,91 @@ begin
                     else
     if b = 7 then Next[x - 1][y + 1] := 1;
   
-  if Life[x][y] = 2 then // проверяем есть ли хищник в клетке и если есть и рядом есть жертва то он размножается 
-    if Life[x + 1][y] = 1 then Next[x + 1][y] := 2
+  if Life[x][y] = 2 then // проверяем есть ли хищник в клетке и если есть и рядом есть жертва то он размножается
+  for i := 1 to fp do
+    if Life[x + i][y] = 1 then Next[x + i][y] := 2
         else 
-    if Life[x][y + 1] = 1 then Next[x][y + 1] := 2
+        if Life[x][y + i] = 1 then Next[x][y + i] := 2
           else
-    if Life[x + 1][y + 1] = 1 then Next[x + 1][y] := 2
+            if Life[x + i][y + i] = 1 then Next[x + i][y] := 2
             else
-    if Life[x + 1][y - 1] = 1 then Next[x + 1][y - 1] := 2
+              if Life[x + i][y - i] = 1 then Next[x + 1][y - 1] := 2
               else
-    if Life[x][y - 1] = 1 then Next[x][y - 1] := 2
+                if Life[x][y - i] = 1 then Next[x][y - i] := 2
                 else
-    if Life[x][y - 1] = 1 then Next[x][y - 1] := 2
+                  if Life[x][y - i] = 1 then Next[x][y - i] := 2
                   else
-    if Life[x - 1][y] = 1 then Next[x - 1][y] := 2
+                    if Life[x - i][y] = 1 then Next[x - i][y] := 2
                     else
-    if Life[x - 1][y - 1] = 1 then Next[x - 1][y - 1] := 2;
-  
+                      if Life[x - i][y - i] = 1 then Next[x - i][y - i] := 2;
   if Life[x][y] = 2 then // проверяем есть ли вокруг хищника хоть одна жертва 
-    if Life[x + 1][y] = 1 then c := c + 1
+    for i := 1 to fp do
+    begin
+      if Life[x + i][y] = 1 then c := c + 1
         else 
-    if n + Life[x][y + 1] = 1 then c := c + 1
+          if n + Life[x][y + i] = 1 then c := c + 1
           else 
-    if Life[x + 1][y + 1] = 1 then c := c + 1
+            if Life[x + i][y + i] = 1 then c := c + 1
             else 
-    if Life[x + 1][y - 1] = 1 then c := c + 1
+              if Life[x + i][y - i] = 1 then c := c + 1
               else 
-    if Life[x][y - 1] = 1 then c := c + 1
+                if Life[x][y - i] = 1 then c := c + 1
                 else
-    if Life[x - 1][y + 1] = 1 then c := c + 1
+                  if Life[x - i][y + i] = 1 then c := c + 1
                   else
-    if Life[x - 1][y] = 1 then c := c + 1
+                    if Life[x - i][y] = 1 then c := c + 1
                     else
-    if Life[x - 1][y - 1] = 1 then c := c + 1;
+                      if Life[x - i][y - i] = 1 then c := c + 1;
+    end;
   
   if  (Life[x][y] = 2) and (c = 0) and (v < 3) then Next[x][y] := 0;
   if (Life[x][y] = 2) and (c = 0) and (v > 3) then
-    for i := 1 to fp do
+    if m = 0 then 
     begin
-      if m = 0 then 
-      begin
-        Next[x][y + i] := 2;
-        Next[x][y] := 0;
-      end
+      Next[x][y + k] := 2;
+      Next[x][y] := 0;
+    end
         else
-      if m = 2 then 
-      begin
-        Next[x + i][y] := 2;
-        Next[x][y] := 0;
-      end
+    if m = 2 then 
+    begin
+      Next[x + k][y] := 2;
+      Next[x][y] := 0;
+    end
           else
-      if m = 1 then
-      begin
-        Next[x][y] := 0;
-        Next[x + i][y + i] := 2;
-      end
+    if m = 1 then
+    begin
+      Next[x][y] := 0;
+      Next[x + k][y + k] := 2;
+    end
             else
-      if m = 3 then
-      begin
-        Next[x + i][y + i] := 2;
-        Next[x][y] := 0;
-      end
+    if m = 3 then
+    begin
+      Next[x + k][y + k] := 2;
+      Next[x][y] := 0;
+    end
               else
-      if m = 4 then
-      begin
-        Next[x][y - i] := 2;
-        Next[x][y] := 0;
-      end
+    if m = 4 then
+    begin
+      Next[x][y - k] := 2;
+      Next[x][y] := 0;
+    end
                 else
-      if m = 5 then
-      begin
-        Next[x - i][y - i] := 2;
-        Next[x][y] := 0;
-      end
+    if m = 5 then
+    begin
+      Next[x - k][y - k] := 2;
+      Next[x][y] := 0;
+    end
                   else
-      if m = 6 then
-      begin
-        Next[x - i][y] := 2;
-        Next[x][y] := 0;
-      end
+    if m = 6 then
+    begin
+      Next[x - k][y] := 2;
+      Next[x][y] := 0;
+    end
                     else
-      if m = 7 then
-      begin
-        Next[x - i][y + i] := 2;
-        Next[x][y] := 0;
-      end;
+    if m = 7 then
+    begin
+      Next[x - k][y + k] := 2;
+      Next[x][y] := 0;
     end;
 end;
 
@@ -162,7 +167,7 @@ var
 begin
   for x := 1 to fx do
     for y := 1 to fy do
-      nextlife(x,y,fp);
+      nextlife(x, y, fp);
   for e := 1 to fx do
     for q := 1 to fy do 
       Life[e][q] := Next[e][q];
@@ -187,10 +192,22 @@ end;
 
 
 begin
+  fp := 1;
+  g := 'Settings.ini';
+  Assign(F, g);
+  Reset(F);
   LockDrawing;
   OnMouseDown := md;
   flag := true;
   OnKeyDown := KeyDown;
+  while not EOF(F) do
+  begin
+    Readln(F, s);
+      //s.split(' ');
+    a := s.split(' ');
+    if a[2] = 'predator^s' then fp := strtoint(a[6]);
+  end;
+  CloseFile(f);
   repeat
     if flag = false then 
       continue;
