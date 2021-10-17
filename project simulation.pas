@@ -18,6 +18,7 @@ var
   f1: text ;
   p:integer;
   pos:real;
+  time : integer; // время наблюдения за симуляцией
 
 procedure drf();// отрисовка поля 
 var
@@ -263,6 +264,7 @@ end;
 
 begin
   p:=1;
+  time:=0;
   LockDrawing;
   OnMouseDown := md;
   flag := true;
@@ -289,9 +291,11 @@ begin
     sleep(300);
     step;
     drf;
+    time:=time+1;
     writeln(f1,life);
     if p = 0 then  halt(0)
   until  0 = p;
-  //CloseFile(f1);
+  writeln(f1,'время наблюдения за симуляцией: ',time);
+  CloseFile(f1);
 end.
 // в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графикоф 
