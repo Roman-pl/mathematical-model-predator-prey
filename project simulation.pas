@@ -311,7 +311,7 @@ begin
         else 
           PreyPopulation:=PreyPopulation+1;
    preyp:=preyp+ ' ' +  PreyPopulation;
-   predp:=preyd+ ' ' +  PredPopulation;
+   predp:=predp+ ' ' +  PredPopulation;
   until  0 = p;
   writeln(f1, 'количество хищников на протяжении разного количество времени ', predp);
   writeln(f1, 'количество жертв на протяжении разного количество времени ', preyp);
