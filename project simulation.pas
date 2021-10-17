@@ -1,8 +1,8 @@
 ﻿uses GraphABC;
 
 const
-  fx = 3;
-  fy = 3;
+  fx = 10;
+  fy = 10;
 
 var
   Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
@@ -17,6 +17,7 @@ var
   a: array of string;
   f1: text ;
   p:integer;
+  pos:real;
 
 procedure drf();// отрисовка поля 
 var
@@ -40,10 +41,10 @@ begin
   Redraw;
 end;
 
-function Nextlife(x, y, fp: integer): integer;
+function Nextlife(x, y, fp: integer;PosPredator,PosPrey:real): integer;
 
 var
-  n, a, b, c, v, m, i, k: integer;
+  n, a, b, c, v, m, i, k,PosPredator2,PosPrey2: integer;
 begin
   n := 0;
   a := 0;
@@ -53,13 +54,51 @@ begin
   m := 0;
   k := 0;
   i := 0;
-  b := random(0, 7);
-  n := random(1, 10);
-  v := random(1, 10);
+  PosPredator2:=0;
+  if PosPredator = 0.0 then PosPredator2:=0;
+  else 
+  if PosPredator = 0.1 then PosPredator2:=1
+  else 
+    if PosPredator = 0.2 then PosPredator2:=2
+    else 
+      if PosPredator =0.3 then PosPredator2:=3
+      else 
+        if PosPredator = 0.4 then PosPredator2 :=4
+        else
+          if PosPredator = 0.5 then PosPredator2:=5
+          else 
+            if PosPredator = 0.6 then PosPredator2:=6
+            else 
+              if PosPredator = 0.7 then PosPredator2:=7 
+              else 
+                if PosPredator = 0.8 then PosPredator2:=8
+                else 
+                  if PosPredator =0.9 then PosPredator2:=9
+                  else 
+                    if PosPredator = 1.0 then PosPredator2:=10;
+  
+  case PosPrey of 
+    0.0: PosPrey2:= 0;
+    0.1: PosPrey2:= 1;
+    0.2: PosPrey2:= 2;
+    0.3: PosPrey2:= 3;
+    0.4: PosPrey2:= 4;
+    0.6: PosPrey2:= 5;
+    0.6: PosPrey2:= 6;
+    0.7: PosPrey2:= 7;
+    0.8: PosPrey2:= 8;
+    0.9: PosPrey2:= 9;
+    1.0: PosPrey2:= 10;
+  end;
+  b := random(0, 10);
+  n := random(PosPrey2, 10); // шанс размножения prey
+  if PosPredator2=0 then v:=0
+  else
+    v := random(PosPredator2, 10);// шанс выживания хищника если вокруг нет еды 
   m := random(0, 7);
   k := random(1, fp);
   
-  if (life[x][y] = 1) and (n > 7) then // если да то где размножится 
+  if (life[x][y] = 1) and (n > 5) then // если да то где размножится 
     if b = 0 then Next[x][y + 1] := 1
         else
     if b = 2 then Next[x + 1][y] := 1
@@ -198,7 +237,7 @@ var
 begin
   for x := 1 to fx do
     for y := 1 to fy do
-      nextlife(x, y, fp);
+      nextlife(x, y, fp,pos);
   for e := 1 to fx do
     for q := 1 to fy do 
       Life[e][q] := Next[e][q];
@@ -222,7 +261,6 @@ begin
   if key = VK_delete then p:=0;
 end;
 
-
 begin
   p:=1;
   LockDrawing;
@@ -236,12 +274,13 @@ begin
   DeleteFile(g);
   Assign(f1,g);
   f1.Rewrite();
+  writeln('справка : пробел - пауза; delete - закрытие программы ');
   while not EOF(F) do
   begin
     Readln(F, s);
-      //s.split(' ');
     a := s.split('=');
-    fp := strtoint(a[1]);
+    if a[0] = 'predator"s field of view ' then fp := strtoint(a[1]);
+    if a[0] = 'the prabability of deth of a predator ' then pos:=strtofloat(a[1]) 
   end;
   CloseFile(f);
   repeat
@@ -255,4 +294,4 @@ begin
   until  0 = p;
   //CloseFile(f1);
 end.
-// в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) хищник умирает с некторой вероятностью и также записывает в текстовый файл парметр "название"="значение в параметра"  
+// в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графикоф 
