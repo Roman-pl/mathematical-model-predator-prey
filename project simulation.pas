@@ -17,7 +17,7 @@ var
   a: array of string;
   f1: text ;
   p:integer;
-  pos:real;
+  PosPredator,PosPrey:real;
   time : integer; // время наблюдения за симуляцией
 
 procedure drf();// отрисовка поля 
@@ -56,60 +56,63 @@ begin
   k := 0;
   i := 0;
   PosPredator2:=0;
+  PosPrey2:=6;
   if PosPredator = 0.0 then PosPredator2:=0
   else 
-    if PosPredator = 0.1 then PosPredator2:=1
+    if PosPredator = 0.1 then PosPredator2:=10
     else 
-      if PosPredator = 0.2 then PosPredator2:=2
+      if PosPredator = 0.2 then PosPredator2:=9
         else 
-          if PosPredator =0.3 then PosPredator2:=3
+          if PosPredator =0.3 then PosPredator2:=8
           else 
-            if PosPredator = 0.4 then PosPredator2 :=4
+            if PosPredator = 0.4 then PosPredator2 :=7
             else
-              if PosPredator = 0.5 then PosPredator2:=5
+              if PosPredator = 0.5 then PosPredator2:=6
                else 
-                 if PosPredator = 0.6 then PosPredator2:=6
+                 if PosPredator = 0.6 then PosPredator2:=5
                  else 
-                   if PosPredator = 0.7 then PosPredator2:=7 
+                   if PosPredator = 0.7 then PosPredator2:=4 
                    else 
-                    if PosPredator = 0.8 then PosPredator2:=8
+                    if PosPredator = 0.8 then PosPredator2:=3
                     else 
-                      if PosPredator =0.9 then PosPredator2:=9
+                      if PosPredator =0.9 then PosPredator2:=2
                       else 
-                        if PosPredator = 1.0 then PosPredator2:=10;
+                        if PosPredator = 1.0 then PosPredator2:=1;
                         
   if PosPrey = 0.0 then PosPrey2:=0
   else 
-    if PosPrey = 0.1 then PosPrey2:=1
+    if PosPrey = 0.1 then PosPrey2:=10
     else 
-      if PosPrey = 0.2 then PosPrey2:=2
+      if PosPrey = 0.2 then PosPrey2:=9
         else 
-          if PosPrey =0.3 then PosPrey2:=3
+          if PosPrey =0.3 then PosPrey2:=8
           else 
-            if PosPrey = 0.4 then PosPrey2 :=4
+            if PosPrey = 0.4 then PosPrey2 :=7
             else
-              if PosPrey = 0.5 then PosPrey2:=5
+              if PosPrey = 0.5 then PosPrey2:=6
                else 
-                 if PosPrey = 0.6 then PosPrey2:=6
+                 if PosPrey = 0.6 then PosPrey2:=5
                  else 
-                   if PosPrey = 0.7 then PosPrey2:=7 
+                   if PosPrey = 0.7 then PosPrey2:=4 
                    else 
-                    if PosPrey = 0.8 then PosPrey2:=8
+                    if PosPrey = 0.8 then PosPrey2:=3
                     else 
-                      if PosPrey =0.9 then PosPrey2:=9
+                      if PosPrey =0.9 then PosPrey2:=2
                       else 
-                        if PosPrey = 1.0 then PosPrey2:=10;
-  b := random(0, 10);
+                        if PosPrey = 1.0 then PosPrey2:=1;
+  b := random(0, 7);
   if PosPrey2=0 then n:=0
   else
-    n := random(PosPrey2, 10); // шанс размножения prey
+    n := random(1,PosPrey2); // шанс размножения prey
+    
   if PosPredator2=0 then v:=0
   else
-    v := random(PosPredator2, 10);// шанс выживания хищника если вокруг нет еды 
+    v := random(1, PosPredator2);// шанс выживания хищника если вокруг нет еды
+    
   m := random(0, 7);
   k := random(1, fp);
   
-  if (life[x][y] = 1) and (n > 5) then // если да то где размножится 
+  if (life[x][y] = 1) and (n > 7) then // если да то где размножится 
     if b = 0 then Next[x][y + 1] := 1
         else
     if b = 2 then Next[x + 1][y] := 1
@@ -248,7 +251,7 @@ var
 begin
   for x := 1 to fx do
     for y := 1 to fy do
-      nextlife(x, y, fp,pos);
+      nextlife(x, y, fp,PosPredator,PosPrey);
   for e := 1 to fx do
     for q := 1 to fy do 
       Life[e][q] := Next[e][q];
@@ -292,8 +295,8 @@ begin
     Readln(F, s);
     a := s.split('=');
     if a[0] = 'predator"s field of view ' then fp := strtoint(a[1]);
-    if a[0] = 'the posibility of deth of a predator ' then pos:=strtofloat(a[1])
-    if a[0] = 'the reproduce of deth of a prey ' then pos:=strtofloat(a[1])
+    if a[0] = 'the posibility of deth of a predator ' then PosPredator:=strtofloat(a[1]);
+    if a[0] = 'the posibility of reproduce of a prey  ' then PosPrey:=strtofloat(a[1]);
   end;
   CloseFile(f);
   repeat
