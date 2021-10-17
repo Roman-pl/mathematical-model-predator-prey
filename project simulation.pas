@@ -8,17 +8,19 @@ var
   Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
   Next: array [0..fx + 1] of array [0..fy + 1]  of integer;
   cs: integer := 20;
-  x: integer;
-  y: integer;
+  x,i: integer;
+  y,j: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
-  s, g: string;
+  s, g,preyp,predp: string;
   a: array of string;
   f1: text;
   p: integer;
   PosPredator, PosPrey: real;
   time: integer;// время наблюдения за симуляцией
+  PredPopulation:integer;
+  PreyPopulation:integer;
 
 procedure drf();// отрисовка поля 
 var
@@ -302,8 +304,17 @@ begin
     step;
     drf;
     time := time + 1;
-    writeln(f1, life);
+    for i:=0 to fx do
+      for j:=0 to fy do
+        if life[i][j]= 2 then 
+          PredPopulation := PredPopulation+1
+        else 
+          PreyPopulation:=PreyPopulation+1;
+   preyp:=preyp+ ' ' +  PreyPopulation;
+   predp:=preyd+ ' ' +  PredPopulation;
   until  0 = p;
+  writeln(f1, 'количество хищников на протяжении разного количество времени ', predp);
+  writeln(f1, 'количество жертв на протяжении разного количество времени ', preyp);
   writeln(f1, 'время наблюдения за симуляцией: ', time);
   CloseFile(f1);
   if p=0 then halt(0);
