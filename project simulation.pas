@@ -7,12 +7,15 @@ const
 var
   Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
   Next: array [0..fx + 1] of array [0..fy + 1]  of integer;
+  ArrPredPopulation:array of integer;
+  ArrPreyPopulation:array of integer;
   cs: integer := 20;
   x,i: integer;
   y,j: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
+  f2:file;
   s, g,preyp,predp: string;
   a: array of string;
   f1: text;
@@ -312,13 +315,32 @@ begin
           if life[i][j]= 2 then PredPopulation := PredPopulation+1;
           if life[i][j]=1 then PreyPopulation:=PreyPopulation+1;
         end;  
-   preyp:=preyp+ ' ' +  PreyPopulation;
-   predp:=predp+ ' ' +  PredPopulation;
+        
+    preyp:=preyp+ ' ' +  PreyPopulation;
+    predp:=predp+ ' ' +  PredPopulation;
+    
+    setlength(ArrPredPopulation,Length(ArrPredPopulation)+1);
+    for i:=0 to length(ArrPreyPopulation)-1 do
+      ArrPredPopulation[i]:=PredPopulation;
+      
+    setlength(ArrPreyPopulation,Length(ArrPreyPopulation)+1);
+    for i:=0 to length(ArrPreyPopulation)-1 do
+      ArrPreyPopulation[i]:=PreyPopulation;
   until  0 = p;
-  writeln(f1, 'количество хищников на протяжении разного количество времени ', predp);
-  writeln(f1, 'количество жертв на протяжении разного количество времени ', preyp);
+  
+  writeln(f1, 'количество хищников на протяжении разного количество времени :', predp);
+  
+  writeln(f1, 'количество жертв на протяжении разного количество времени :', preyp);
+  
   writeln(f1, 'время наблюдения за симуляцией: ', time);
   CloseFile(f1);
+  g := 'saved array.bin';
+  DeleteFile(g);
+  Assign(f2, g);
+  f2.rewrite();
+  write(f2,time);
+  for i:=0 to time-1 do
+      write (f2,ArrPredPopulation[i],ArrPreyPopulation[i]);
   if p=0 then halt(0);
 end.
 // в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графикоф 
