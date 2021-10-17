@@ -56,43 +56,53 @@ begin
   k := 0;
   i := 0;
   PosPredator2:=0;
-  if PosPredator = 0.0 then PosPredator2:=0;
+  if PosPredator = 0.0 then PosPredator2:=0
   else 
-  if PosPredator = 0.1 then PosPredator2:=1
-  else 
-    if PosPredator = 0.2 then PosPredator2:=2
+    if PosPredator = 0.1 then PosPredator2:=1
     else 
-      if PosPredator =0.3 then PosPredator2:=3
-      else 
-        if PosPredator = 0.4 then PosPredator2 :=4
-        else
-          if PosPredator = 0.5 then PosPredator2:=5
+      if PosPredator = 0.2 then PosPredator2:=2
+        else 
+          if PosPredator =0.3 then PosPredator2:=3
           else 
-            if PosPredator = 0.6 then PosPredator2:=6
-            else 
-              if PosPredator = 0.7 then PosPredator2:=7 
-              else 
-                if PosPredator = 0.8 then PosPredator2:=8
-                else 
-                  if PosPredator =0.9 then PosPredator2:=9
-                  else 
-                    if PosPredator = 1.0 then PosPredator2:=10;
-  
-  case PosPrey of 
-    0.0: PosPrey2:= 0;
-    0.1: PosPrey2:= 1;
-    0.2: PosPrey2:= 2;
-    0.3: PosPrey2:= 3;
-    0.4: PosPrey2:= 4;
-    0.6: PosPrey2:= 5;
-    0.6: PosPrey2:= 6;
-    0.7: PosPrey2:= 7;
-    0.8: PosPrey2:= 8;
-    0.9: PosPrey2:= 9;
-    1.0: PosPrey2:= 10;
-  end;
+            if PosPredator = 0.4 then PosPredator2 :=4
+            else
+              if PosPredator = 0.5 then PosPredator2:=5
+               else 
+                 if PosPredator = 0.6 then PosPredator2:=6
+                 else 
+                   if PosPredator = 0.7 then PosPredator2:=7 
+                   else 
+                    if PosPredator = 0.8 then PosPredator2:=8
+                    else 
+                      if PosPredator =0.9 then PosPredator2:=9
+                      else 
+                        if PosPredator = 1.0 then PosPredator2:=10;
+                        
+  if PosPrey = 0.0 then PosPrey2:=0
+  else 
+    if PosPrey = 0.1 then PosPrey2:=1
+    else 
+      if PosPrey = 0.2 then PosPrey2:=2
+        else 
+          if PosPrey =0.3 then PosPrey2:=3
+          else 
+            if PosPrey = 0.4 then PosPrey2 :=4
+            else
+              if PosPrey = 0.5 then PosPrey2:=5
+               else 
+                 if PosPrey = 0.6 then PosPrey2:=6
+                 else 
+                   if PosPrey = 0.7 then PosPrey2:=7 
+                   else 
+                    if PosPrey = 0.8 then PosPrey2:=8
+                    else 
+                      if PosPrey =0.9 then PosPrey2:=9
+                      else 
+                        if PosPrey = 1.0 then PosPrey2:=10;
   b := random(0, 10);
-  n := random(PosPrey2, 10); // шанс размножения prey
+  if PosPrey2=0 then n:=0
+  else
+    n := random(PosPrey2, 10); // шанс размножения prey
   if PosPredator2=0 then v:=0
   else
     v := random(PosPredator2, 10);// шанс выживания хищника если вокруг нет еды 
@@ -282,7 +292,8 @@ begin
     Readln(F, s);
     a := s.split('=');
     if a[0] = 'predator"s field of view ' then fp := strtoint(a[1]);
-    if a[0] = 'the prabability of deth of a predator ' then pos:=strtofloat(a[1]) 
+    if a[0] = 'the posibility of deth of a predator ' then pos:=strtofloat(a[1])
+    if a[0] = 'the reproduce of deth of a prey ' then pos:=strtofloat(a[1])
   end;
   CloseFile(f);
   repeat
