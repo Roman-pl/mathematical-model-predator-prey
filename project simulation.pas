@@ -304,12 +304,14 @@ begin
     step;
     drf;
     time := time + 1;
+    PredPopulation:=0;
+    PreyPopulation:=0;
     for i:=0 to fx do
       for j:=0 to fy do
-        if life[i][j]= 2 then 
-          PredPopulation := PredPopulation+1
-        else 
-          PreyPopulation:=PreyPopulation+1;
+        begin
+          if life[i][j]= 2 then PredPopulation := PredPopulation+1;
+          if life[i][j]=1 then PreyPopulation:=PreyPopulation+1;
+        end;  
    preyp:=preyp+ ' ' +  PreyPopulation;
    predp:=predp+ ' ' +  PredPopulation;
   until  0 = p;
