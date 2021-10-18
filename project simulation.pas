@@ -7,23 +7,23 @@ const
 var
   Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
   Next: array [0..fx + 1] of array [0..fy + 1]  of integer;
-  ArrPredPopulation:array of integer;
-  ArrPreyPopulation:array of integer;
+  ArrPredPopulation: array of integer;
+  ArrPreyPopulation: array of integer;
   cs: integer := 20;
-  x,i: integer;
-  y,j: integer;
+  x, i: integer;
+  y, j: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
-  f2:file;
-  s, g,preyp,predp: string;
+  f2: file;
+  s, g, preyp, predp: string;
   a: array of string;
   f1: text;
   p: integer;
   PosPredator, PosPrey: real;
   time: integer;// время наблюдения за симуляцией
-  PredPopulation:integer;
-  PreyPopulation:integer;
+  PredPopulation: integer;
+  PreyPopulation: integer;
 
 procedure drf();// отрисовка поля 
 var
@@ -68,19 +68,19 @@ begin
   if (life[x][y] = 1)  and (random() <= PosPrey) then
     if b = 0 then Next[x][y + 1] := 1
     else
-      if b = 1 then Next[x + 1][y] := 1
-    else
-        if b = 2 then Next[x + 1][y + 1] := 1
-    else
-          if b = 3 then Next[x][y - 1] := 1
-    else
-            if b = 4 then Next[x + 1][y - 1] := 1
-    else
-              if b = 5 then Next[x - 1][y - 1] := 1
-    else
-                if b = 6 then Next[x - 1][y + 1] := 1
-    else
-                  if b = 7 then Next[x - 1][y] := 1;
+    if b = 1 then Next[x + 1][y] := 1
+      else
+    if b = 2 then Next[x + 1][y + 1] := 1
+        else
+    if b = 3 then Next[x][y - 1] := 1
+          else
+    if b = 4 then Next[x + 1][y - 1] := 1
+            else
+    if b = 5 then Next[x - 1][y - 1] := 1
+              else
+    if b = 6 then Next[x - 1][y + 1] := 1
+                else
+    if b = 7 then Next[x - 1][y] := 1;
   
   if Life[x][y] = 2 then // проверяем есть ли хищник в клетке и если есть и рядом есть жертва то он размножается
     for i := 1 to fp do
@@ -130,9 +130,9 @@ begin
     for i := 1 to fp do
     begin
       if Life[x + i][y] = 1 then c := c + 1
-        else 
+      else 
       if n + Life[x][y + i] = 1 then c := c + 1
-          else 
+        else 
       if Life[x + i][y + i] = 1 then c := c + 1
             else 
       if Life[x + i][y - i] = 1 then c := c + 1
@@ -258,7 +258,6 @@ begin
       Life[e][q] := Next[e][q];
 end;
 
-
 procedure MD(x, y, mb: integer);// постановка хищников и жертв краснные - хищники; зеленные - жертвы
 begin
   if mb = 1 then  
@@ -267,8 +266,6 @@ begin
     life[x div cs][y div cs] := 2 - life[x div cs][y div cs];//ставим хищника
   drf;
 end;
-
-
 
 procedure KeyDown(Key: integer);
 begin
@@ -300,6 +297,7 @@ begin
     if a[0] = 'the posibility of reproduce of a prey ' then PosPrey := strtofloat(a[1]);
   end;
   CloseFile(f);
+  
   repeat
     if flag = false then 
       continue;
@@ -307,25 +305,23 @@ begin
     step;
     drf;
     time := time + 1;
-    PredPopulation:=0;
-    PreyPopulation:=0;
-    for i:=0 to fx do
-      for j:=0 to fy do
-        begin
-          if life[i][j]= 2 then PredPopulation := PredPopulation+1;
-          if life[i][j]=1 then PreyPopulation:=PreyPopulation+1;
-        end;  
-        
-    preyp:=preyp+ ' ' +  PreyPopulation;
-    predp:=predp+ ' ' +  PredPopulation;
+    PredPopulation := 0;
+    PreyPopulation := 0;
+    for i := 0 to fx do
+      for j := 0 to fy do
+      begin
+        if life[i][j] = 2 then PredPopulation := PredPopulation + 1;
+        if life[i][j] = 1 then PreyPopulation := PreyPopulation + 1;
+      end;  
     
-    setlength(ArrPredPopulation,Length(ArrPredPopulation)+1);
-    for i:=0 to length(ArrPreyPopulation)-1 do
-      ArrPredPopulation[i]:=PredPopulation;
-      
-    setlength(ArrPreyPopulation,Length(ArrPreyPopulation)+1);
-    for i:=0 to length(ArrPreyPopulation)-1 do
-      ArrPreyPopulation[i]:=PreyPopulation;
+    preyp := preyp + ',' +  PreyPopulation;
+    predp := predp + ',' +  PredPopulation;
+    
+    setlength(ArrPredPopulation, Length(ArrPredPopulation) + 1);
+    ArrPredPopulation[length(ArrPredPopulation)-1] := PredPopulation;
+    
+    setlength(ArrPreyPopulation, Length(ArrPreyPopulation) + 1);
+    ArrPreyPopulation[length(ArrPreyPopulation)-1] := PreyPopulation;
   until  0 = p;
   
   writeln(f1, 'количество хищников на протяжении разного количество времени :', predp);
@@ -338,9 +334,12 @@ begin
   DeleteFile(g);
   Assign(f2, g);
   f2.rewrite();
-  write(f2,time);
-  for i:=0 to time-1 do
-      write (f2,ArrPredPopulation[i],ArrPreyPopulation[i]);
-  if p=0 then halt(0);
+  write(f2, time);
+  for i := 0 to time - 1 do
+  begin
+    write(f2, ArrPredPopulation[i],ArrPreyPopulation[i]); 
+  end;
+  if p = 0 then halt(0);
+  closefile(f2);
 end.
 // в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графикоф 
