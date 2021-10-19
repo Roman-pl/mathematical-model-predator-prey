@@ -15,7 +15,7 @@ var
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
-  f2: file;
+  f2: file of  integer;
   s, g, preyp, predp: string;
   a: array of string;
   f1: text;
@@ -337,7 +337,7 @@ begin
   write(f2, time);
   for i := 0 to time - 1 do
   begin
-    write(f2, ArrPredPopulation[i],ArrPreyPopulation[i]); 
+    write(f2,ArrPreyPopulation[i],ArrPredPopulation[i]); 
   end;
   if p = 0 then halt(0);
   closefile(f2);
