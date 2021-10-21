@@ -94,7 +94,15 @@ begin
     end;
   end;
   
-  //writeln(ArrPredPopulation);
-  //writeln(ArrPreyPopulation);
+  Setlength(ArrPredGraphics,time);
+  MoveTo(0,window.Height);
+    for i:=0 to time-1 do
+    begin
+      pen.Color := Clred;
+      pen.Width:=3;
+      ArrPredGraphics[i].x:=i; 
+      ArrPredGraphics[i].y:=round((PosPredator-1*ArrPreyPopulation[i])*ArrPredPopulation[i]);
+      LineTo(ArrPredGraphics[i].x*10+500,ArrPredGraphics[i].y*10+500)
+    end;  
   closefile(f);
 end.
