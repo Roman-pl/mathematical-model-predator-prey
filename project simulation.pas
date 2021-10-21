@@ -41,8 +41,6 @@ begin
       if life[i][j] = 2 then 
         brush.Color := clred;
       Rectangle(i * cs + 1, j * cs + 1, i * cs + cs - 1, j * cs + cs - 1); 
-      //if life[i][j] = 1 then begin brush.Color:=clgreen ; FillRectangle (i*cs,j*cs,i*cs+cs,j*cs+cs); end;
-      //if life[i][j] = 0 then begin pen.Color:=clwhite ; FillRectangle (i*cs,j*cs,i*cs+cs,j*cs+cs); end;
     end;
   Redraw;
 end;
@@ -342,4 +340,4 @@ begin
   if p = 0 then halt(0);
   closefile(f2);
 end.
-// в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графикоф 
+// в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графиков 
