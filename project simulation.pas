@@ -1,17 +1,12 @@
 ﻿uses GraphABC;
 
-{const
-  fx = 10;
-  fy = 10;}
-
 var
   Life: array of array of integer; 
   Next: array of array of integer;
   ArrPredPopulation: array of integer;
   ArrPreyPopulation: array of integer;
   cs: integer := 20;
-  x, i: integer;
-  y, j: integer;
+  i,j,u: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
@@ -26,15 +21,16 @@ var
   PreyPopulation: integer;
   fx:integer;
   fy:integer;
-
+  x:integer ;
+  y:integer ;
 procedure drf(fx,fy:integer);// отрисовка поля 
 var
   j, i: integer;
 begin
   pen.Width := 1;
   pen.Color := clblack;
-  for i := 1 to fx do 
-    for j := 1 to fy do 
+  for i := fp to fx+fp-1 do 
+    for j := fp to fy+fp-1 do 
     begin
       if life[i][j] = 1 then 
         brush.Color := clgreen
@@ -65,6 +61,7 @@ begin
   b := random(0, 7);
   m := random(0, 7);
   k := random(1, fp);
+  
   if (life[x][y] = 1)  and (random() <= PosPrey) then
     if b = 0 then Next[x][y + 1] := 1
     else
@@ -75,7 +72,7 @@ begin
     if b = 3 then Next[x][y - 1] := 1
           else
     if b = 4 then Next[x + 1][y - 1] := 1
-            else
+            else  
     if b = 5 then Next[x - 1][y - 1] := 1
               else
     if b = 6 then Next[x - 1][y + 1] := 1
@@ -145,6 +142,7 @@ begin
                     else
       if Life[x - i][y - i] = 1 then c := c + 1;
     end;
+    
   if (life[x][y] = 2) and (c = 0) and (random() > PosPredator) then Next[x][y] := 0;
   if (life[x][y] = 2) and (c = 0) and (random() <= PosPredator) then
     if m = 0 then 
@@ -194,55 +192,6 @@ begin
       Next[x - k][y + k] := 2;
       Next[x][y] := 0;
     end; 
-  {if  (Life[x][y] = 2) and (c = 0) and (v < 3) then Next[x][y] := 0;
-  if (Life[x][y] = 2) and (c = 0) and (v > 3) then
-  if m = 0 then 
-  begin
-  Next[x][y + k] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 1 then
-  begin
-  Next[x + k][y + k] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 2 then 
-  begin
-  Next[x + k][y] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 3 then
-  begin
-  Next[x + k][y + k] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 4 then
-  begin
-  Next[x][y - k] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 5 then
-  begin
-  Next[x - k][y - k] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 6 then
-  begin
-  Next[x - k][y] := 2;
-  Next[x][y] := 0;
-  end
-  else
-  if m = 7 then
-  begin
-  Next[x - k][y + k] := 2;
-  Next[x][y] := 0;
-  end;}
 end;
 
 procedure step(fx,fy:integer);//процедура перехода от одной итерации к другой
@@ -250,11 +199,11 @@ var
   x, e: integer;
   y, q: integer;
 begin
-  for x := 0 to fx do
-    for y := 0 to fy do
+  for x := fp to fx+fp-1 do
+    for y := fp to fy+fp-1 do
       nextlife(x, y, fp, PosPredator, PosPrey);
-  for e := 0 to fx do
-    for q := 0 to fy do 
+  for e := fp to fx+fp-1 do
+    for q := fp to fy+fp-1 do 
       Life[e][q] := Next[e][q];
 end;
 
@@ -276,11 +225,12 @@ end;
 begin
   p := 1;
   time := 0;
-  i:=0;
+  u:=0;
   LockDrawing;
   OnMouseDown := md;
   flag := true;
   OnKeyDown := KeyDown;
+  
   g := 'Settings.ini';
   Assign(F, g);
   Reset(F);
@@ -288,7 +238,8 @@ begin
   DeleteFile(g);
   Assign(f1, g);
   f1.Rewrite();
-  writeln('справка : пробел - пауза; delete - закрытие программы ');
+  
+  
   while not EOF(F) do
   begin
     Readln(F, s);
@@ -301,16 +252,16 @@ begin
   end;
   CloseFile(f);
   
-  setlength(life,fx+fp);
-  for i:= 0 to fx+fp do
+  setlength(life,fx+fp+fp+1);
+  for u:= 0 to fx+fp+fp do
   begin
-    setlength(life[i],fy+fp);
+    setlength(life[u],fy+fp+fp+1);
   end;
-     
-  setlength(next,fx+fp);   
-  for i:= 0 to fx+fp do
+  
+  setlength(next,fx+fp+fp+1);   
+  for u:= 0 to fx+fp+fp do
   begin
-    setlength(next[i],fy+fp); 
+    setlength(next[u],fy+fp+fp+1); 
   end;
      
   repeat
@@ -322,6 +273,7 @@ begin
     time := time + 1;
     PredPopulation := 0;
     PreyPopulation := 0;
+    
     for i := 0 to fx do
       for j := 0 to fy do
       begin
@@ -338,7 +290,6 @@ begin
     setlength(ArrPreyPopulation, Length(ArrPreyPopulation) + 1);
     ArrPreyPopulation[length(ArrPreyPopulation)-1] := PreyPopulation;
   until  0 = p;
-  
   writeln(f1, 'количество хищников на протяжении разного количество времени :', predp);
   
   writeln(f1, 'количество жертв на протяжении разного количество времени :', preyp);
@@ -354,7 +305,6 @@ begin
   begin
     write(f2,ArrPreyPopulation[i],ArrPredPopulation[i]); 
   end;
-  if p = 0 then halt(0);
   closefile(f2);
 end.
 // обЪединить все в одну программу исправить все ошибки в отрисовке 
