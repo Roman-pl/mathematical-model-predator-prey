@@ -1,12 +1,12 @@
 ﻿uses GraphABC;
 
-const
+{const
   fx = 10;
-  fy = 10;
+  fy = 10;}
 
 var
-  Life: array [0..fx + 1] of array [0..fy + 1]  of integer; 
-  Next: array [0..fx + 1] of array [0..fy + 1]  of integer;
+  Life: array of array of integer; 
+  Next: array of array of integer;
   ArrPredPopulation: array of integer;
   ArrPreyPopulation: array of integer;
   cs: integer := 20;
@@ -24,8 +24,10 @@ var
   time: integer;// время наблюдения за симуляцией
   PredPopulation: integer;
   PreyPopulation: integer;
+  fx:integer;
+  fy:integer;
 
-procedure drf();// отрисовка поля 
+procedure drf(fx,fy:integer);// отрисовка поля 
 var
   j, i: integer;
 begin
@@ -243,16 +245,16 @@ begin
   end;}
 end;
 
-procedure step;//процедура перехода от одной итерации к другой
+procedure step(fx,fy:integer);//процедура перехода от одной итерации к другой
 var
   x, e: integer;
   y, q: integer;
 begin
-  for x := 1 to fx do
-    for y := 1 to fy do
+  for x := 0 to fx do
+    for y := 0 to fy do
       nextlife(x, y, fp, PosPredator, PosPrey);
-  for e := 1 to fx do
-    for q := 1 to fy do 
+  for e := 0 to fx do
+    for q := 0 to fy do 
       Life[e][q] := Next[e][q];
 end;
 
@@ -262,7 +264,7 @@ begin
     life[x div cs][y div cs] := 1 - life[x div cs][y div cs];;//ставим жертву 
   if mb = 2 then 
     life[x div cs][y div cs] := 2 - life[x div cs][y div cs];//ставим хищника
-  drf;
+  drf(fx,fy);
 end;
 
 procedure KeyDown(Key: integer);
@@ -274,6 +276,7 @@ end;
 begin
   p := 1;
   time := 0;
+  i:=0;
   LockDrawing;
   OnMouseDown := md;
   flag := true;
@@ -293,15 +296,29 @@ begin
     if a[0] = 'predator"s field of view ' then fp := strtoint(a[1]);
     if a[0] = 'the posibility of death of a predator ' then PosPredator := strtofloat(a[1]);
     if a[0] = 'the posibility of reproduce of a prey ' then PosPrey := strtofloat(a[1]);
+    if a[0] = 'field length by x ' then fx:= strtoint(a[1]);
+    if a[0] = 'field length by y ' then fy:= strtoint(a[1]); 
   end;
   CloseFile(f);
   
+  setlength(life,fx+fp);
+  for i:= 0 to fx+fp do
+  begin
+    setlength(life[i],fy+fp);
+  end;
+     
+  setlength(next,fx+fp);   
+  for i:= 0 to fx+fp do
+  begin
+    setlength(next[i],fy+fp); 
+  end;
+     
   repeat
     if flag = false then 
       continue;
     sleep(300);
-    step;
-    drf;
+    step(fx,fy);
+    drf(fx,fy);
     time := time + 1;
     PredPopulation := 0;
     PreyPopulation := 0;
@@ -340,4 +357,4 @@ begin
   if p = 0 then halt(0);
   closefile(f2);
 end.
-// в следущую неделю увидим : у хищника у видим поле зрения запись в файл (желательно в бинарный) считывание из бин файла и построение графиков 
+// обЪединить все в одну программу исправить все ошибки в отрисовке 

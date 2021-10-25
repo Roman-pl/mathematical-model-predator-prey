@@ -20,8 +20,16 @@ var
   x2,y2:integer;
   p:integer; // вероятность того что жертву съест хищник
   s: string;
+  l,z:integer;
   PosPredator:real; // вероятность смерти хщника
   PosPrey: real;// вероятность размножения жертвы
+
+procedure InitMathGraph;
+begin
+  Coordinate.SetMathematic;
+  Coordinate.SetOrigin(20,Window.Height-20);
+end;
+
 
 begin
   assign(f, 'saved array.bin');
@@ -76,33 +84,35 @@ begin
   end;
   
   begin
-  window.Maximize;
+  window.Normalize;
+  InitMathGraph;
+  moveto(0,0);
   Setlength(ArrPreyGraphics,time);
-  MoveTo(0,window.Height);
     for i:=0 to time-1 do
     begin
       pen.Color := Clgreen;
       pen.Width:=3;
       ArrPreyGraphics[i].x:=i;
-      if ArrPreyPopulation[i]=0 then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+1]))) div 1
-      else
-        if i = time -1 then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+0]))) div ArrPreyPopulation[i]
+        if (i = (time -1)) and (ArrPreyPopulation[i]=0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+0]))) div 1
         else
-          p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+1]))) div ArrPreyPopulation[i]; //вероятность сЪедения жертвы;  
+          if (i = (time -1)) and (ArrPreyPopulation[i]>0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+0]))) div ArrPreyPopulation[i]
+          else
+            if (i < (time -1)) and (ArrPreyPopulation[i]>0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+1]))) div 1;
        ArrPreyGraphics[i].y:=round((PosPrey-p*ArrPredPopulation[i])*ArrPreyPopulation[i]);
-       LineTo(ArrPreyGraphics[i].x*10+500,ArrPreyGraphics[i].y*10+500)
+       //LineTo(ArrPreyGraphics[i].x*5,(ArrPreyGraphics[i].y));
+       LineTo(i*5,ArrPreyPopulation[i]);
     end;
-  end;
-  
+  moveto(0,0);
   Setlength(ArrPredGraphics,time);
-  MoveTo(0,window.Height);
     for i:=0 to time-1 do
     begin
       pen.Color := Clred;
-      pen.Width:=3;
+      pen.Width:n=3;
       ArrPredGraphics[i].x:=i; 
-      ArrPredGraphics[i].y:=round((PosPredator-1*ArrPreyPopulation[i])*ArrPredPopulation[i]);
-      LineTo(ArrPredGraphics[i].x*10+500,ArrPredGraphics[i].y*10+500)
-    end;  
+      ArrPredGraphics[i].y:=round((-PosPredator+1*ArrPreyPopulation[i])*ArrPredPopulation[i]);
+      //LineTo(ArrPredGraphics[i].x*5,(ArrPredGraphics[i].y));
+      LineTo(i*5, ArrPredPopulation[i]);
+    end;
+   end;
   closefile(f);
 end.
