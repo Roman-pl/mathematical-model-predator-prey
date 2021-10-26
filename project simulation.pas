@@ -34,12 +34,15 @@ begin
   Coordinate.SetOrigin(20,Window.Height-20);
 end;
 
-procedure drf(fx,fy:integer);// отрисовка поля 
+procedure drf(fx,fy,p:integer);// отрисовка поля 
 var
   j, i: integer;
 begin
   pen.Width := 1;
-  pen.Color := clblack;
+  if p = 0 then pen.Color := clwhite
+  else
+  begin
+    pen.Color := clblack;
   for i := fp to fx+fp-1 do 
     for j := fp to fy+fp-1 do 
     begin
@@ -50,6 +53,7 @@ begin
       if life[i][j] = 2 then 
         brush.Color := clred;
       Rectangle(i * cs + 1, j * cs + 1, i * cs + cs - 1, j * cs + cs - 1); 
+    end;
     end;
   Redraw;
 end;
@@ -224,7 +228,7 @@ begin
     life[x div cs][y div cs] := 1 - life[x div cs][y div cs];;//ставим жертву 
   if mb = 2 then 
     life[x div cs][y div cs] := 2 - life[x div cs][y div cs];//ставим хищника
-  drf(fx,fy);
+  drf(fx,fy,p);
 end;
 
 procedure KeyDown(Key: integer);
@@ -280,7 +284,7 @@ begin
       continue;
     sleep(300);
     step(fx,fy);
-    drf(fx,fy);
+    drf(fx,fy,p);
     time := time + 1;
     PredPopulation := 0;
     PreyPopulation := 0;
@@ -322,7 +326,7 @@ begin
   if m = 'y' then
   begin
   //pen.Color:=clWhite;
-  //FillRect(0,0,Window.Width,Window.Height);
+  FillRect(0,0,Window.Width,Window.Height);
   ClearWindow();
   assign(f3, 'saved array.bin');
   reset(f3);
