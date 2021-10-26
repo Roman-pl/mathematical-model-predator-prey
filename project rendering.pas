@@ -11,16 +11,10 @@ var
   ArrPreyPopulation: array of integer;
   a, b: array of integer;
   c: array of string;
-  ArrPredGraphics : array of point;
-  ArrPreyGraphics : array of point;
   f: file;
   f2: text;
   i, time, n,j,x: integer;
-  x1,y1:integer;
-  x2,y2:integer;
-  p:integer; // вероятность того что жертву съест хищник
   s: string;
-  l,z:integer;
   PosPredator:real; // вероятность смерти хщника
   PosPrey: real;// вероятность размножения жертвы
 
@@ -87,30 +81,17 @@ begin
   window.Normalize;
   InitMathGraph;
   moveto(0,0);
-  Setlength(ArrPreyGraphics,time);
     for i:=0 to time-1 do
     begin
       pen.Color := Clgreen;
       pen.Width:=3;
-      ArrPreyGraphics[i].x:=i;
-        if (i = (time -1)) and (ArrPreyPopulation[i]=0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+0]))) div 1
-        else
-          if (i = (time -1)) and (ArrPreyPopulation[i]>0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+0]))) div ArrPreyPopulation[i]
-          else
-            if (i < (time -1)) and (ArrPreyPopulation[i]>0) then p:=(abs((ArrPreyPopulation[i]-ArrPreyPopulation[i+1]))) div 1;
-       ArrPreyGraphics[i].y:=round((PosPrey-p*ArrPredPopulation[i])*ArrPreyPopulation[i]);
-       //LineTo(ArrPreyGraphics[i].x*5,(ArrPreyGraphics[i].y));
        LineTo(i*5,ArrPreyPopulation[i]);
     end;
   moveto(0,0);
-  Setlength(ArrPredGraphics,time);
     for i:=0 to time-1 do
     begin
       pen.Color := Clred;
-      pen.Width:n=3;
-      ArrPredGraphics[i].x:=i; 
-      ArrPredGraphics[i].y:=round((-PosPredator+1*ArrPreyPopulation[i])*ArrPredPopulation[i]);
-      //LineTo(ArrPredGraphics[i].x*5,(ArrPredGraphics[i].y));
+      pen.Width:=3;
       LineTo(i*5, ArrPredPopulation[i]);
     end;
    end;

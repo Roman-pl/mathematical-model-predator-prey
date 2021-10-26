@@ -6,13 +6,13 @@ var
   ArrPredPopulation: array of integer;
   ArrPreyPopulation: array of integer;
   cs: integer := 20;
-  i,j,u: integer;
+  i,j,u,n: integer;
   flag: boolean;
   fp: integer;// поле зрения хищника который (будет считываться из  текстового файла)
   f: text;
   f2: file of  integer;
-  s, g, preyp, predp: string;
-  a: array of string;
+  s, g, preyp, predp,m: string;
+  a,c: array of string;
   f1: text;
   p: integer;
   PosPredator, PosPrey: real;
@@ -23,6 +23,17 @@ var
   fy:integer;
   x:integer ;
   y:integer ;
+  b,a1:array of integer ;
+  f3:file;
+  
+  
+  
+procedure InitMathGraph;
+begin
+  Coordinate.SetMathematic;
+  Coordinate.SetOrigin(20,Window.Height-20);
+end;
+
 procedure drf(fx,fy:integer);// отрисовка поля 
 var
   j, i: integer;
@@ -306,5 +317,76 @@ begin
     write(f2,ArrPreyPopulation[i],ArrPredPopulation[i]); 
   end;
   closefile(f2);
+  
+  Read(m);
+  if m = 'y' then
+  begin
+  //pen.Color:=clWhite;
+  //FillRect(0,0,Window.Width,Window.Height);
+  ClearWindow();
+  assign(f3, 'saved array.bin');
+  reset(f3);
+  i := 0;
+  setlength(b, 1);
+  j:=0;
+  while not EOF(F3) do
+  begin
+    if i = 0 then
+       begin 
+       read(f3, b[i]); 
+       i:=0;
+       end
+    else
+    begin
+      setlength(a1, Length(a1) + 1);
+      read(f3, a1[j]);
+      j:=j+1;
+    end;
+    i := i + 1;
+  end;
+  time := b[0];
+  
+
+  n := length(a1) div 2;
+  setlength(ArrPreyPopulation,time);
+  setlength(ArrPredPopulation, time);
+ 
+  j:=0;
+  x:=0;
+  for i :=0 to length(a1)-1 do
+  begin
+    if i mod 2 = 0 then
+      begin 
+      ArrPreyPopulation[j]:=a1[i];
+      j:=j+1; 
+      end
+      else
+      begin
+        ArrPredPopulation[x]:=a1[i];
+        x:=x+1;
+      end;
+  end;
+  
+  begin
+  window.Normalize;
+  InitMathGraph;
+  moveto(0,0);
+    for i:=0 to time-1 do
+    begin
+      pen.Color := Clgreen;
+      pen.Width:=3;
+       LineTo(i*5,ArrPreyPopulation[i]);
+    end;
+  moveto(0,0);
+    for i:=0 to time-1 do
+    begin
+      pen.Color := Clred;
+      pen.Width:=3;
+      LineTo(i*5, ArrPredPopulation[i]);
+    end;
+   end;
+  closefile(f3);
+  end;
+  
 end.
 // обЪединить все в одну программу исправить все ошибки в отрисовке 
